@@ -1,0 +1,10 @@
+# TODO: Finish implementing the user authentication.
+# FIXME: There is a bug in the login process.
+# NOTE: Remember to update the documentation.
+
+# TODO: usuń duplikaty z tabeli, moze te overview w jedo połączyc dla danego tytułu?
+w jaki sposób sprawdzać wyniki?
+ustal różne wagi
+
+learnAROMA
+
