@@ -1,0 +1,38 @@
+def NDCG(row,N):
+    generated = row.loc['topN_movies']
+    from_test_set = row.loc['Hu']
+    #sprawdzenie który n-ty element z TopN został irl oceniony przez użytkownika
+    available_n = [index + 1  for index, element in enumerate(generated) if element in from_test_set]
+    DCG = sum([1 / math.log(1+n,2) for n in available_n])
+    IDCG = sum([1 / math.log(1+n,2) for n in range(1,N+1)])
+    NDCG = DCG / IDCG
+    row['NDCG'] = NDCG
+    return row
+
+def Precision_Recall(row,N):
+    generated = row.loc['topN_movies']
+    from_test_set = row.loc['Hu']
+    
+    intersection = sum([1 for element in generated if element in from_test_set])
+    N != len(generated)
+    Precision = intersection * 100 / N
+    row['Precision'] = Precision
+    
+    row['Recall'] = intersection * 100 / len(from_test_set)
+    return row
+
+def show_Hu(row):
+    #wybieranie id filmów, dla których w zbiorze testowym użytkownik wystawił jakieś oceny
+    nonzero = row[row > 0].index
+    nonzero_indices = nonzero.values
+    row['Hu'] = nonzero_indices.tolist()
+    return row
+
+def find_topN_items(users_ratings,N):
+    topN = users_ratings.nlargest(N) #N najlepiej ocenianych filmów (rating i indeks) 
+                                        #zwraca się od najwiekszej do najmn wartosci
+    topN_indices = topN.index #indeksy tych najlepiej ocenianych
+    #wyrzucam z topN filmy, dla których wystawiono zero
+    top_nonzero_indices = users_ratings[topN_indices][users_ratings[topN_indices] > 0].index
+    users_ratings["topN_movies"] = top_nonzero_indices.values
+    return users_ratings
